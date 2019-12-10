@@ -9,3 +9,4 @@ sed -i "s/{HOSTNAME}/${HOSTNAME}/g" heplify.service
 systemctl daemon-reload
 systemctl start heplify
 systemctl enable heplify
+systemctl status heplify
