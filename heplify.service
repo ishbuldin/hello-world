@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/heplify
-ExecStart=/opt/heplify/heplify -hs 10.9.1.19:9060 -hn ${HOSTNAME}
+ExecStart=/opt/heplify/heplify -hs 10.9.1.19:9060 -hn {HOSTNAME}
 ExecStop=/bin/kill ${MAINPID}
 Restart=on-failure
 RestartSec=10s
