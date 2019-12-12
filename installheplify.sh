@@ -35,6 +35,7 @@ elif [[ $DIST == "7" ]]; then
   systemctl daemon-reload
   systemctl start heplify
   systemctl enable heplify
+  systemctl status heplify
 else
   echo "Release does not 5, 6 or 7"
 exit 1
