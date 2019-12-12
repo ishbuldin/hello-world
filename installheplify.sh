@@ -29,7 +29,7 @@ elif [[ $DIST == "6" ]]; then
 elif [[ $DIST == "7" ]]; then
   echo "centos 7"
   cd /etc/systemd/system/
-  wget https://github.com/ishbuldin/hello-world/blob/master/heplify.service
+  wget https://raw.githubusercontent.com/ishbuldin/hello-world/master/heplify.service
   chmod +x heplify.service
   sed -i "s/{HOSTNAME}/${HOSTNAME}/g" heplify.service
   systemctl daemon-reload
