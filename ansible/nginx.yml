@@ -1,0 +1,63 @@
+---
+- hosts: rhel-nginx
+  remote_user:
+    root
+
+  tasks:
+    - name: Installing EPEL
+      yum:
+        name=epel-release
+        state=present
+
+    - name: Installing libselinux-python
+      yum:
+        name=libselinux-python
+        state=latest
+
+    - name: Installing Nginx Web Server
+      yum:
+        name=nginx
+        state=latest
+      register: nginx_installed
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution == "RedHat"
+        - ansible_distribution_major_version == "6"
+        - ansible_distribution_version == "6.7"
+
+    - name: Start nginx
+      service:
+        name: nginx
+        enabled: yes
+        state: started
+      when: nginx_installed.rc == 0
+
+    - name: Replace nginx.conf
+      template:
+        src=roles/nginx/templates/nginx.conf
+        dest=/etc/nginx/nginx.conf
+      when: nginx_installed.rc == 0
+
+    - name: Backup old config
+      archive:
+        path: /etc/nginx/conf.d/
+        dest: /etc/nginx/conf.d.bak.tar.gz
+      when: nginx_installed.rc == 0
+
+    - name: Replace conf.d
+      unarchive:
+        src=roles/nginx/templates/conf.d.tar.gz
+        dest=/etc/nginx/
+      when: nginx_installed.rc == 0
+
+    - name: Check config
+      command:
+        cmd: /usr/sbin/nginx -t
+      register: nginx_config_status
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        enabled: yes
+        state: restarted
+      when: nginx_config_status.rc == 0
